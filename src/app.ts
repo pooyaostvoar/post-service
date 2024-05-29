@@ -2,11 +2,11 @@ import express, { Express, Request, Response } from "express";
 
 //typeorm
 import "reflect-metadata";
-import { Post } from "./database/entity/post";
 import bodyParser from "body-parser";
 import { AppDataSource } from "./database/datasource";
-import { upload } from "./middleware/file";
 import { postRouter } from "./api/post";
+import cors from "cors";
+import { fileRouter } from "./api/file";
 
 const isTesting = process.env.NODE_ENV === "test";
 
@@ -27,11 +27,17 @@ const app: Express = express();
 const port = 3003;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 app.listen(port, () => {
   //console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
-app.use("", postRouter);
+app.use("/post", postRouter);
+app.use("", fileRouter);
 
 export default app;
