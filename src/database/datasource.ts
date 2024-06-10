@@ -13,11 +13,11 @@ export const AppDataSource = new DataSource(
       }
     : {
         type: "postgres",
-        host: "localhost",
+        host: "db",
         port: 5434,
         username: "route_admin",
         password: "route_admin",
-        database: "test",
+        database: "post_db",
         synchronize: true,
         entities: [Post],
       }
