@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { upload } from "../middleware/file";
 import { Post } from "../database/entity/post";
 import { AppDataSource } from "../database/datasource";
-import fetch from "node-fetch";
+import { authMiddleware } from "../middleware/auth";
 
 export const postRouter = express.Router();
 
@@ -18,13 +18,7 @@ postRouter.post(
   }
 );
 
-postRouter.get("", async (req: Request, res: Response) => {
-  console.log(JSON.stringify(req.headers));
-  const response = await fetch("http://user:3004/auth-user", {
-    method: "GET",
-    headers: { cookie: JSON.parse(JSON.stringify(req.headers)).cookie },
-  });
-
+postRouter.get("", authMiddleware, async (req: Request, res: Response) => {
   const postRepository = AppDataSource.getRepository(Post);
   res.send(await postRepository.find());
 });
